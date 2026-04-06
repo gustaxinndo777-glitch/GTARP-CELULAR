@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GTRP Ultimate OS</title>
+    <style>
+        :root { --wpp: #00a884; --wpp-bg: #0b141a; --nu: #820ad1; --ios: #007aff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; outline: none; }
+        body { background: #1a1a1a; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+        
+        /* CARCAÇA */
+        .smartphone { 
+            width: 360px; height: 760px; background: #000; border: 10px solid #333; 
+            border-radius: 45px; position: relative; overflow: hidden; align-self: center;
+        }
+
+        /* BARRA DE STATUS */
+        .status-bar { 
+            position: absolute; top: 0; width: 100%; height: 35px; background: rgba(0,0,0,0.5);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 25px; 
+            font-size: 12px; z-index: 10000; color: white;
+        }
+
+        /* ENGINE DE TELAS */
+        .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: #000; z-index: 10; }
+        .active { display: flex; animation: fade 0.2s ease; }
+        @keyframes fade { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* HOME SCREEN */
+        #sc-home { background: url('https://w0.peakpx.com/wallpaper/1019/335/HD-wallpaper-ios-14-apple-background-ios14-iphone.jpg') center/cover; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 70px 20px; }
+        .app { display: flex; flex-direction: column; align-items: center; color: white; font-size: 11px; cursor: pointer; }
+        .app img { width: 60px; height: 60px; border-radius: 15px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+
+        /* WHATSAPP VISUAL COMPLETO */
+        .w-header { background: #202c33; padding: 50px 15px 15px; color: white; display: flex; justify-content: space-between; }
+        .w-list { flex: 1; overflow-y: auto; background: #111b21; }
+        .w-item { padding: 15px; border-bottom: 1px solid #1c252a; display: flex; align-items: center; color: white; }
+        .w-img { width: 45px; height: 45px; background: #3d4a52; border-radius: 50%; margin-right: 12px; }
+        
+        /* BOTÃO FLUTUANTE ADICIONAR (ZAP) */
+        .w-fab { 
+            position: absolute; bottom: 80px; right: 20px; width: 55px; height: 55px; 
+            background: var(--wpp); border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; font-size: 24px; color: white; border: none; box-shadow: 0 4px 10px #000; z-index: 100;
+        }
+
+        /* CHAT */
+        .chat-win { position: absolute; inset: 0; background: var(--wpp-bg); display: none; flex-direction: column; z-index: 1000; }
+        .chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; }
+        .bbl { padding: 8px 12px; margin: 4px 0; border-radius: 10px; max-width: 80%; color: white; font-size: 14px; }
+        .sent { background: #005c4b; align-self: flex-end; }
+        .recv { background: #202c33; align-self: flex-start; }
+
+        /* NUBANK & PERFIL */
+        .card { background: #1c1c1e; margin: 15px; padding: 20px; border-radius: 20px; color: white; border: 1px solid #333; }
+        .info { margin-bottom: 12px; }
+        .info label { color: #888; font-size: 11px; display: block; text-transform: uppercase; }
+
+        /* BARRINHA DE SAIR (NAV BAR) */
+        .home-bar { 
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); 
+            width: 130px; height: 5px; background: white; border-radius: 10px; 
+            z-index: 100000; cursor: pointer; transition: 0.2s;
+        }
+        .home-bar:active { transform: translateX(-50%) scale(0.9); background: #aaa; }
+
+        /* LOGIN */
+        #sc-login { z-index: 50000; justify-content: center; padding: 30px; text-align: center; color: white; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #111; color: white; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--ios); color: white; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="smartphone">
+    <div class="status-bar"><span id="clock">00:00</span><span>📶 🔋</span></div>
+
+    <div id="sc-login" class="screen active">
+        <h1>GTRP Mobile</h1>
+        <p style="color:#666; margin-bottom:20px;">Acesse com seu nome da prefeitura</p>
+        <input type="text" id="in-user" placeholder="Seu Nome">
+        <button class="btn" onclick="GTR.auth()">ENTRAR</button>
+    </div>
+
+    <div id="sc-home" class="screen">
+        <div class="grid">
+            <div class="app" onclick="GTR.open('wpp')"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">WhatsApp</div>
+            <div class="app" onclick="GTR.open('nu')"><img src="https://logodownload.org/wp-content/uploads/2019/08/nubank-logo-3.png" style="background:#fff; padding:5px">Nubank</div>
+            <div class="app" onclick="GTR.open('set')"><img src="https://cdn-icons-png.flaticon.com/512/563/563541.png">Ajustes</div>
+        </div>
+    </div>
+
+    <div id="sc-wpp" class="screen">
+        <div class="w-header"><b>WhatsApp</b><span>🔍 ⋮</span></div>
+        <div id="contatos-list" class="w-list"></div>
+        <button class="w-fab" onclick="alert('Lista de contatos atualizada!')">💬</button>
+
+        <div id="chat-ui" class="chat-win">
+            <div class="w-header"><span onclick="GTR.closeChat()" style="cursor:pointer">←</span> <b id="chat-nome">Nome</b><span>📞 ⋮</span></div>
+            <div id="msgs" class="chat-msgs"></div>
+            <div style="background:#202c33; padding:10px; display:flex; align-items:center;">
+                <input type="text" id="msg-input" style="margin:0; flex:1; border-radius:20px;">
+                <button onclick="GTR.send()" style="background:var(--wpp); border:none; width:40px; height:40px; border-radius:50%; color:white; margin-left:8px">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sc-nu" class="screen">
+        <div style="background:var(--nu); padding:60px 20px 25px; color:white;"><h3>Olá, <span class="u-name"></span></h3></div>
+        <div class="card" style="margin-top:-15px;">
+            <p style="color:#888">Saldo em conta</p>
+            <h2 id="u-saldo">R$ 0,00</h2>
+            <button class="btn" style="margin-top:15px; background:#333" onclick="GTR.pix()">💠 Transferir PIX</button>
+        </div>
+    </div>
+
+    <div id="sc-set" class="screen">
+        <div style="padding:60px 20px 10px; color:white;"><h2>Ajustes</h2></div>
+        <div class="card">
+            <div class="info"><label>Nome</label><b class="u-name">---</b></div>
+            <div class="info"><label>Telefone (3 dígitos)</label><b id="u-tel">---</b></div>
+            <div class="info"><label>CPF (4 dígitos)</label><b id="u-cpf">---</b></div>
+            <div class="info"><label>Gmail (8 caracteres)</label><b id="u-mail">---</b></div>
+        </div>
+        <div style="padding:0 15px"><button class="btn" style="background:#ff3b30" onclick="localStorage.clear(); location.reload()">LOGOUT</button></div>
+    </div>
+
+    <div class="home-bar" onclick="GTR.goHome()"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, push, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const config = { apiKey: "AIzaSyAKGxxEnAcvBc5D34B_P08pS_Y8H-v5A-Y", databaseURL: "https://meurp-celular-default-rtdb.firebaseio.com" };
+    const db = getDatabase(initializeApp(config));
+
+    window.GTR = {
+        user: localStorage.getItem('gtr_user'),
+        alvo: null,
+
+        auth: async () => {
+            const n = document.getElementById('in-user').value.trim();
+            if(!n) return;
+            const snap = await get(ref(db, 'usuarios/'+n));
+            if(!snap.exists()) return alert("Você não existe na prefeitura (cidade.html)!");
+            localStorage.setItem('gtr_user', n);
+            location.reload();
+        },
+
+        open: (id) => {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('sc-'+id).classList.add('active');
+        },
+
+        goHome: () => {
+            GTR.open('home');
+            GTR.closeChat();
+        },
+
+        init: () => {
+            if(!GTR.user) return;
+            document.getElementById('sc-login').classList.remove('active');
+            GTR.open('home');
+            document.querySelectorAll('.u-name').forEach(e => e.innerText = GTR.user);
+
+            // Carregar Dados RP
+            onValue(ref(db, 'usuarios/'+GTR.user), snap => {
+                const d = snap.val();
+                if(d) {
+                    document.getElementById('u-saldo').innerText = "R$ " + (d.saldo||0).toLocaleString('pt-br');
+                    document.getElementById('u-tel').innerText = d.tel || "---";
+                    document.getElementById('u-cpf').innerText = d.cpf || "---";
+                    document.getElementById('u-mail').innerText = d.gmail || "---";
+                }
+            });
+
+            // Lista WhatsApp
+            onValue(ref(db, 'usuarios'), snap => {
+                const list = document.getElementById('contatos-list'); list.innerHTML = "";
+                snap.forEach(u => {
+                    if(u.key !== GTR.user) 
+                        list.innerHTML += `<div class="w-item" onclick="GTR.openChat('${u.key}')"><div class="w-img"></div><b>${u.key}</b></div>`;
+                });
+            });
+
+            setInterval(() => {
+                const d = new Date();
+                document.getElementById('clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
+            }, 1000);
+        },
+
+        openChat: (nome) => {
+            GTR.alvo = nome;
+            document.getElementById('chat-nome').innerText = nome;
+            document.getElementById('chat-ui').style.display = 'flex';
+            onValue(ref(db, 'mensagens'), snap => {
+                const box = document.getElementById('msgs'); box.innerHTML = "";
+                snap.forEach(m => {
+                    const d = m.val();
+                    if((d.de===GTR.user && d.para===nome) || (d.de===nome && d.para===GTR.user))
+                        box.innerHTML += `<div class="bbl ${d.de===GTR.user?'sent':'recv'}">${d.txt}</div>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        },
+
+        closeChat: () => document.getElementById('chat-ui').style.display = 'none',
+
+        send: () => {
+            const i = document.getElementById('msg-input');
+            if(!i.value) return;
+            push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, txt: i.value });
+            i.value = "";
+        },
+
+        pix: async () => {
+            const p = prompt("Nome do Jogador:");
+            const v = parseFloat(prompt("Valor:"));
+            if(!p || !v) return;
+            const r1 = ref(db, `usuarios/${GTR.user}/saldo`);
+            const r2 = ref(db, `usuarios/${p}/saldo`);
+            const s1 = (await get(r1)).val();
+            const s2 = await get(r2);
+            if(!s2.exists()) return alert("Jogador não existe!");
+            if(s1 < v) return alert("Saldo insuficiente!");
+            await set(r1, s1 - v); await set(r2, s2.val() + v);
+        }
+    };
+
+    if(GTR.user) GTR.init();
+</script>
+</body>
+</html>
