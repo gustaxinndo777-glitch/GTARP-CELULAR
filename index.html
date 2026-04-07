@@ -3,87 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GTRP Ultimate OS - Audio Fix</title>
+    <title>GTRP Ultimate OS</title>
     <style>
-        :root { --wpp: #00a884; --wpp-bg: #0b141a; --nu: #820ad1; --ios: #007aff; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; outline: none; }
+        :root { --wpp: #00a884; --wpp-bg: #0b141a; --nu: #820ad1; --ios: #007aff; --tiger: #ff9500; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
         body { background: #1a1a1a; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
         
         .smartphone { width: 360px; height: 760px; background: #000; border: 10px solid #333; border-radius: 45px; position: relative; overflow: hidden; align-self: center; }
-        .status-bar { position: absolute; top: 0; width: 100%; height: 35px; background: rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: center; padding: 0 25px; font-size: 12px; z-index: 10000; color: white; }
-        .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: #000; z-index: 10; }
-        .active { display: flex; animation: fade 0.2s ease; }
-        @keyframes fade { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        #sc-home { background: url('https://w0.peakpx.com/wallpaper/1019/335/HD-wallpaper-ios-14-apple-background-ios14-iphone.jpg') center/cover; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 70px 20px; }
-        .app { display: flex; flex-direction: column; align-items: center; color: white; font-size: 11px; cursor: pointer; }
-        .app img { width: 60px; height: 60px; border-radius: 15px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-
-        .w-header { background: #202c33; padding: 50px 15px 15px; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .w-list { flex: 1; overflow-y: auto; background: #111b21; }
-        .w-item { padding: 15px; border-bottom: 1px solid #1c252a; display: flex; align-items: center; color: white; }
-        .w-img { width: 45px; height: 45px; background: #3d4a52; border-radius: 50%; margin-right: 12px; }
+        .status-bar { position: absolute; top: 0; width: 100%; height: 35px; background: rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; padding: 0 25px; font-size: 12px; z-index: 1000000; color: white; }
         
-        .chat-win { position: absolute; inset: 0; background: var(--wpp-bg); display: none; flex-direction: column; z-index: 1000; }
-        .chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; padding-bottom: 20px; }
-        .bbl { padding: 8px 12px; margin: 4px 0; border-radius: 10px; max-width: 80%; color: white; font-size: 14px; }
+        .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: #000; z-index: 10; padding-bottom: 60px; background-size: cover; background-position: center; }
+        .active { display: flex; animation: fade 0.1s ease; }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+        /* TELA DE BLOQUEIO PRIORITÁRIA */
+        #sc-lock { z-index: 900000; justify-content: center; align-items: center; text-align: center; color: white; }
+        .lock-box { z-index: 999999; position: relative; width: 100%; }
+        .lock-time { font-size: 70px; font-weight: 200; margin-bottom: 20px; text-shadow: 0 2px 15px rgba(0,0,0,0.8); }
+        .pin-input { background: rgba(255,255,255,0.25); border: 2px solid rgba(255,255,255,0.4); width: 180px; text-align: center; font-size: 28px; letter-spacing: 8px; padding: 15px; border-radius: 20px; color: white; backdrop-filter: blur(15px); }
+
+        /* HOME BAR */
+        .home-bar-area { position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; z-index: 1000000; display: flex; justify-content: center; align-items: center; }
+        .home-bar { width: 120px; height: 5px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+
+        /* GRID DA HOME */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 100px 20px; }
+        .app { display: flex; flex-direction: column; align-items: center; color: white; font-size: 11px; font-weight: 600; text-shadow: 0 2px 5px #000; }
+        .app img { width: 62px; height: 62px; border-radius: 16px; margin-bottom: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+
+        /* WHATSAPP */
+        .w-header { background: #202c33; padding: 50px 15px 15px; color: white; display: flex; justify-content: space-between; }
+        .chat-win { position: absolute; inset: 0; background: var(--wpp-bg); display: none; flex-direction: column; z-index: 2000; padding-bottom: 60px; }
+        .chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; }
+        .bbl { padding: 10px 14px; margin: 5px 0; border-radius: 12px; max-width: 85%; color: white; font-size: 14px; }
         .sent { background: #005c4b; align-self: flex-end; }
         .recv { background: #202c33; align-self: flex-start; }
 
-        .chat-input-area { background: #202c33; padding: 15px 10px 45px 10px; display: flex; align-items: center; position: relative; bottom: 0; z-index: 1001; }
-        .mic-btn { background: #128c7e; border: none; width: 45px; height: 45px; border-radius: 50%; color: white; margin-left: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .mic-active { background: #ff3b30 !important; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        /* NUBANK & PIX MODAL */
+        .nu-header { background: var(--nu); padding: 65px 20px 30px; color: white; }
+        .card { background: #1c1c1e; margin: 15px; padding: 22px; border-radius: 22px; color: white; border: 1px solid #333; }
+        .nu-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: #333; color: white; font-weight: bold; margin-top: 12px; }
+        #pix-modal { position: absolute; inset: 0; background: rgba(0,0,0,0.98); z-index: 500000; display: none; flex-direction: column; padding: 70px 25px; color: white; }
 
-        .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: white; border-radius: 10px; z-index: 100000; cursor: pointer; }
-        #sc-login { z-index: 50000; justify-content: center; padding: 30px; text-align: center; color: white; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #111; color: white; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--ios); color: white; font-weight: bold; cursor: pointer; }
+        /* TIGRINHO */
+        #sc-tiger { background: #1a0101; }
+        .slot-machine { width: 290px; height: 190px; background: #ffcc00; border: 10px solid #cc0000; border-radius: 25px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 25px; }
+        .slot-col { width: 75px; height: 130px; background: white; border-radius: 12px; font-size: 55px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .spinning { animation: spin 0.1s infinite; }
+        @keyframes spin { 0% { transform: translateY(-15px); } 100% { transform: translateY(15px); } }
     </style>
 </head>
 <body>
 
 <div class="smartphone">
-    <div class="status-bar"><span id="clock">00:00</span><span>📶 🔋</span></div>
+    <div class="status-bar"><span class="clock-text">--:--</span><span>📶 🔋</span></div>
 
-    <div id="sc-login" class="screen active">
-        <h1>GTRP Mobile</h1>
-        <input type="text" id="in-user" placeholder="Seu Nome">
-        <button class="btn" onclick="GTR.auth()">ENTRAR</button>
+    <div id="sc-lock" class="screen active">
+        <div class="lock-box">
+            <div class="lock-time clock-text">--:--</div>
+            <p style="margin-bottom:20px; font-size:15px; font-weight: bold;">DIGITE SEU PIN</p>
+            <input type="password" id="pin-field" class="pin-input" maxlength="4" oninput="GTR.checkPin(this.value)" placeholder="••••" autofocus>
+        </div>
+    </div>
+
+    <div id="sc-login" class="screen">
+        <div style="padding:100px 30px; text-align:center; color:white;">
+            <h2>GTRP MOBILE</h2>
+            <input type="text" id="in-user" placeholder="Seu Nome" style="width:100%; padding:18px; margin-top:25px; border-radius:15px; background:#111; border:1px solid #444; color:white;">
+            <input type="text" id="in-cpf" placeholder="Seu CPF" style="width:100%; padding:18px; margin-top:12px; border-radius:15px; background:#111; border:1px solid #444; color:white;">
+            <button class="nu-btn" style="background:var(--ios); margin-top:35px;" onclick="GTR.auth()">ENTRAR NO SISTEMA</button>
+        </div>
     </div>
 
     <div id="sc-home" class="screen">
         <div class="grid">
             <div class="app" onclick="GTR.open('wpp')"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">WhatsApp</div>
             <div class="app" onclick="GTR.open('nu')"><img src="https://logodownload.org/wp-content/uploads/2019/08/nubank-logo-3.png" style="background:#fff; padding:5px">Nubank</div>
+            <div class="app" onclick="GTR.open('tiger')"><img src="https://png.pngtree.com/png-clipart/20231014/original/pngtree-3d-tiger-cartoon-png-image_13303649.png" style="background:#ff9500; padding:5px">Tigrinho</div>
             <div class="app" onclick="GTR.open('set')"><img src="https://cdn-icons-png.flaticon.com/512/563/563541.png">Ajustes</div>
         </div>
     </div>
 
     <div id="sc-wpp" class="screen">
         <div class="w-header"><b>WhatsApp</b><span>🔍 ⋮</span></div>
-        <div id="contatos-list" class="w-list"></div>
-
+        <div id="contatos-list" style="flex:1; overflow-y:auto; background:#111b21;"></div>
         <div id="chat-ui" class="chat-win">
-            <div class="w-header">
-                <span onclick="GTR.closeChat()" style="cursor:pointer">←</span> 
-                <b id="chat-nome">Nome</b>
-                <span>
-                    <label id="call-status" style="font-size: 10px; color: #00ff00; display: none;">EM CALL</label>
-                    <button onclick="GTR.toggleCall()" style="background:none; border:none; color:white; font-size:20px;">📞</button>
-                </span>
-            </div>
+            <div class="w-header"><span onclick="GTR.closeChat()">←</span> <b id="chat-nome">Nome</b><span>📞</span></div>
             <div id="msgs" class="chat-msgs"></div>
-            <div class="chat-input-area">
-                <input type="text" id="msg-input" style="margin:0; flex:1; border-radius:20px;">
-                <button onclick="GTR.send()" style="background:var(--wpp); border:none; width:45px; height:45px; border-radius:50%; color:white; margin-left:8px">➤</button>
-                <button id="btn-audio" class="mic-btn" onclick="GTR.toggleAudio()">🎤</button>
+            <div style="background:#202c33; padding:12px; display:flex; align-items:center;">
+                <input type="text" id="msg-input" style="flex:1; padding:14px; border-radius:25px; background:#2a3942; border:none; color:white;">
+                <button onclick="GTR.send()" style="background:var(--wpp); border:none; width:45px; height:45px; border-radius:50%; color:white; margin-left:10px;">➤</button>
+                <button id="btn-audio" onclick="GTR.toggleAudio()" style="background:#128c7e; border:none; width:45px; height:45px; border-radius:50%; color:white; margin-left:6px;">🎤</button>
             </div>
         </div>
     </div>
 
-    <div class="home-bar" onclick="GTR.goHome()"></div>
+    <div id="sc-nu" class="screen">
+        <div class="nu-header"><p>Olá, <b class="u-name">Cidadão</b></p></div>
+        <div class="card" style="margin-top:-25px;">
+            <p style="color:#888;">Saldo disponível</p>
+            <h1 id="u-saldo">R$ 0,00</h1>
+            <button class="nu-btn" onclick="document.getElementById('pix-modal').style.display='flex'">💠 Enviar Pix</button>
+        </div>
+        <div id="pix-modal">
+            <h3>Área Pix</h3>
+            <input type="text" id="pix-nome" placeholder="Nome do Destinatário" style="width:100%; padding:18px; margin-top:25px; border-radius:12px; background:#222; border:1px solid #444; color:white;">
+            <input type="number" id="pix-valor" placeholder="Valor R$" style="width:100%; padding:18px; margin-top:15px; border-radius:12px; background:#222; border:1px solid #444; color:white;">
+            <button class="nu-btn" style="background:var(--nu)" onclick="GTR.executarPix()">CONFIRMAR ENVIO</button>
+            <button class="nu-btn" onclick="document.getElementById('pix-modal').style.display='none'">CANCELAR</button>
+        </div>
+    </div>
+
+    <div id="sc-tiger" class="screen">
+        <div style="background:#cc0000; padding:50px 20px 15px; color:white; text-align:center;"><b>🐯 GTR BET - TIGRINHO</b></div>
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-top:30px;">
+            <div class="card" style="width:90%; text-align:center;">
+                <p style="font-size:12px; color:#888;">SALDO EM JOGO</p>
+                <h2 id="tiger-balance" style="color:#ffcc00;">R$ 0,00</h2>
+            </div>
+            <div id="tiger-result" style="color:white; font-weight:bold; margin:15px 0; min-height:25px;"></div>
+            <div class="slot-machine">
+                <div class="slot-col" id="s1">🐯</div>
+                <div class="slot-col" id="s2">🐯</div>
+                <div class="slot-col" id="s3">🐯</div>
+            </div>
+            <div style="width:90%;">
+                <input type="number" id="bet-amount" placeholder="Valor da Aposta" style="width:100%; padding:15px; border-radius:12px; background:#222; border:1px solid #cc0000; color:white; margin-bottom:12px;">
+                <button class="nu-btn" id="tiger-spin-btn" style="background:#ffcc00; color:#000;" onclick="GTR.spinTiger()">APOSTAR AGORA</button>
+                <div style="display:flex; gap:12px; margin-top:12px;">
+                    <button class="nu-btn" style="flex:1; background:#007aff" onclick="GTR.depositoTiger()">DEPOSITAR</button>
+                    <button class="nu-btn" style="flex:1; background:#34c759" onclick="GTR.sacarTiger()">SACAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sc-set" class="screen">
+        <div style="padding:65px 25px 25px; color:white;"><h2>Ajustes</h2></div>
+        <div class="card">
+            <p style="color:#888; font-size:12px;">LINK DO FUNDO (LOCK/HOME):</p>
+            <input type="text" id="wall-link" placeholder="Cole o link .jpg ou .png" style="width:100%; padding:12px; border-radius:10px; background:#222; border:1px solid #444; color:white; margin-top:8px;">
+            <button class="nu-btn" onclick="GTR.setWall(document.getElementById('wall-link').value)">SALVAR WALLPAPER</button>
+        </div>
+        <div class="card">
+            <input type="text" id="new-pin" placeholder="Novo PIN (4 digitos)" maxlength="4" style="width:100%; padding:12px; border-radius:10px; background:#222; border:1px solid #444; color:white;">
+            <button class="nu-btn" onclick="GTR.changePin()">ATUALIZAR PIN 0000</button>
+        </div>
+    </div>
+
+    <div class="home-bar-area" onclick="GTR.goHome()"><div class="home-bar"></div></div>
 </div>
 
 <script type="module">
@@ -92,116 +160,135 @@
 
     const config = { apiKey: "AIzaSyAKGxxEnAcvBc5D34B_P08pS_Y8H-v5A-Y", databaseURL: "https://meurp-celular-default-rtdb.firebaseio.com" };
     const db = getDatabase(initializeApp(config));
-
-    let mediaRecorder;
-    let audioChunks = [];
-    let isRecording = false;
+    let recorder, chunks = [], isRec = false;
 
     window.GTR = {
         user: localStorage.getItem('gtr_user'),
-        alvo: null,
+        pin: localStorage.getItem('gtr_pin') || "0000",
+        wall: localStorage.getItem('gtr_wall') || 'https://i.ibb.co/RGDcS6kX/IMG-20260406-WA0000.jpg',
+        tigerSaldo: 0, realSaldo: 0,
+
+        clock: () => {
+            const d = new Date();
+            const t = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
+            document.querySelectorAll('.clock-text').forEach(e => e.innerText = t);
+        },
+
+        checkPin: (v) => {
+            if(v === GTR.pin) { 
+                document.getElementById('sc-lock').classList.remove('active'); 
+                if(!GTR.user) GTR.open('login'); else GTR.open('home');
+                document.getElementById('pin-field').value = "";
+            } else if(v.length === 4) {
+                alert("PIN INCORRETO!"); document.getElementById('pin-field').value = "";
+            }
+        },
+
+        setWall: (url) => {
+            if(url) {
+                GTR.wall = url; localStorage.setItem('gtr_wall', url);
+                document.getElementById('sc-lock').style.backgroundImage = `url('${url}')`;
+                document.getElementById('sc-home').style.backgroundImage = `url('${url}')`;
+                alert("WALLPAPER ATUALIZADO!");
+            }
+        },
+
+        changePin: () => { const p = document.getElementById('new-pin').value; if(p.length===4){ GTR.pin = p; localStorage.setItem('gtr_pin', p); alert("PIN SALVO!"); } },
 
         auth: async () => {
             const n = document.getElementById('in-user').value.trim();
-            if(!n) return;
-            localStorage.setItem('gtr_user', n);
-            location.reload();
+            const c = document.getElementById('in-cpf').value.trim();
+            const snap = await get(ref(db, `usuarios/${n}`));
+            if(snap.exists() && snap.val().cpf == c) { localStorage.setItem('gtr_user', n); location.reload(); }
+            else alert("USUÁRIO NÃO ENCONTRADO!");
         },
 
-        open: (id) => {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('sc-'+id).classList.add('active');
-        },
-
+        open: (id) => { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('sc-'+id).classList.add('active'); },
         goHome: () => { GTR.open('home'); GTR.closeChat(); },
 
         init: () => {
+            GTR.clock(); setInterval(GTR.clock, 1000);
+            document.getElementById('sc-lock').style.backgroundImage = `url('${GTR.wall}')`;
+            document.getElementById('sc-home').style.backgroundImage = `url('${GTR.wall}')`;
             if(!GTR.user) return;
-            document.getElementById('sc-login').classList.remove('active');
-            GTR.open('home');
-            document.querySelectorAll('.u-name').forEach(e => e.innerText = GTR.user);
-
-            onValue(ref(db, 'usuarios'), snap => {
-                const list = document.getElementById('contatos-list'); list.innerHTML = "";
-                snap.forEach(u => {
-                    if(u.key !== GTR.user) 
-                        list.innerHTML += `<div class="w-item" onclick="GTR.openChat('${u.key}')"><div class="w-img"></div><b>${u.key}</b></div>`;
-                });
+            onValue(ref(db, `usuarios/${GTR.user}`), s => {
+                const d = s.val(); if(d){ GTR.realSaldo = d.saldo || 0; document.querySelectorAll('.u-name').forEach(e => e.innerText = GTR.user); document.getElementById('u-saldo').innerText = "R$ " + GTR.realSaldo.toLocaleString('pt-br'); }
             });
+            onValue(ref(db, 'usuarios'), s => {
+                const list = document.getElementById('contatos-list'); list.innerHTML = "";
+                s.forEach(u => { if(u.key !== GTR.user) list.innerHTML += `<div style="padding:18px; border-bottom:1px solid #222; color:white;" onclick="GTR.openChat('${u.key}')"><b>${u.key}</b></div>`; });
+            });
+        },
 
-            setInterval(() => {
-                const d = new Date();
-                document.getElementById('clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
+        executarPix: async () => {
+            const alvo = document.getElementById('pix-nome').value.trim();
+            const valor = parseFloat(document.getElementById('pix-valor').value);
+            if(!alvo || isNaN(valor) || valor <= 0 || valor > GTR.realSaldo) return alert("ERRO NO VALOR OU SALDO!");
+            const snapAlvo = await get(ref(db, `usuarios/${alvo}/saldo`));
+            if(!snapAlvo.exists()) return alert("JOGADOR NÃO EXISTE!");
+            await set(ref(db, `usuarios/${GTR.user}/saldo`), GTR.realSaldo - valor);
+            await set(ref(db, `usuarios/${alvo}/saldo`), snapAlvo.val() + valor);
+            alert("PIX ENVIADO COM SUCESSO!");
+            document.getElementById('pix-modal').style.display = 'none';
+        },
+
+        depositoTiger: async () => {
+            const v = parseFloat(prompt("VALOR DO DEPÓSITO:"));
+            if(v > 0 && v <= GTR.realSaldo) {
+                await set(ref(db, `usuarios/${GTR.user}/saldo`), GTR.realSaldo - v);
+                GTR.tigerSaldo += v; document.getElementById('tiger-balance').innerText = "R$ " + GTR.tigerSaldo.toFixed(2);
+            }
+        },
+        spinTiger: () => {
+            const bet = parseFloat(document.getElementById('bet-amount').value);
+            if(!bet || bet > GTR.tigerSaldo) return alert("SALDO INSUFICIENTE!");
+            GTR.tigerSaldo -= bet;
+            document.getElementById('tiger-result').innerText = "SORTEANDO...";
+            const cols = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
+            cols.forEach(c => c.classList.add('spinning'));
+            setTimeout(() => {
+                cols.forEach(c => c.classList.remove('spinning'));
+                const icons = ["🐯", "💰", "💎", "🍒"];
+                const r = [icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)]];
+                cols[0].innerText = r[0]; cols[1].innerText = r[1]; cols[2].innerText = r[2];
+                let win = 0; if(r[0]===r[1] && r[1]===r[2]) win = bet*5; else if(r[0]===r[1] || r[1]===r[2]) win = bet*2;
+                GTR.tigerSaldo += win;
+                document.getElementById('tiger-result').innerText = win > 0 ? "GANHOU R$ "+win.toFixed(2) : "NÃO FOI DESSA VEZ!";
+                document.getElementById('tiger-balance').innerText = "R$ " + GTR.tigerSaldo.toFixed(2);
             }, 1000);
+        },
+        sacarTiger: async () => {
+            if(GTR.tigerSaldo < 150) return alert("MÍNIMO R$ 150!");
+            const snap = await get(ref(db, `usuarios/${GTR.user}/cpf`));
+            if(prompt("DIGITE SEU CPF:") === snap.val()) {
+                await set(ref(db, `usuarios/${GTR.user}/saldo`), GTR.realSaldo + GTR.tigerSaldo);
+                GTR.tigerSaldo = 0; alert("DINHEIRO ENVIADO PRO NUBANK!");
+            }
         },
 
         openChat: (nome) => {
-            GTR.alvo = nome;
-            document.getElementById('chat-nome').innerText = nome;
-            document.getElementById('chat-ui').style.display = 'flex';
-            onValue(ref(db, 'mensagens'), snap => {
+            GTR.alvo = nome; document.getElementById('chat-nome').innerText = nome; document.getElementById('chat-ui').style.display = 'flex';
+            onValue(ref(db, 'mensagens'), s => {
                 const box = document.getElementById('msgs'); box.innerHTML = "";
-                snap.forEach(m => {
-                    const d = m.val();
-                    if((d.de===GTR.user && d.para===nome) || (d.de===nome && d.para===GTR.user)) {
-                        if(d.tipo === 'audio') {
-                            box.innerHTML += `<div class="bbl ${d.de===GTR.user?'sent':'recv'}"><audio controls src="${d.url}" style="width:180px"></audio></div>`;
-                        } else {
-                            box.innerHTML += `<div class="bbl ${d.de===GTR.user?'sent':'recv'}">${d.txt}</div>`;
-                        }
+                s.forEach(m => {
+                    const d = m.val(); if((d.de===GTR.user && d.para===nome) || (d.de===nome && d.para===GTR.user)) {
+                        box.innerHTML += `<div class="bbl ${d.de===GTR.user?'sent':'recv'}">${d.tipo==='audio'?'<audio controls src="'+d.url+'" style="width:160px"></audio>':d.txt}</div>`;
                     }
-                });
-                box.scrollTop = box.scrollHeight;
+                }); box.scrollTop = box.scrollHeight;
             });
         },
-
         closeChat: () => document.getElementById('chat-ui').style.display = 'none',
-
-        send: () => {
-            const i = document.getElementById('msg-input');
-            if(!i.value) return;
-            push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, txt: i.value, tipo: 'texto' });
-            i.value = "";
-        },
-
+        send: () => { const i = document.getElementById('msg-input'); if(i.value) { push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, txt: i.value, tipo: 'texto' }); i.value = ""; } },
         toggleAudio: async () => {
-            const btn = document.getElementById('btn-audio');
-            if (!isRecording) {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                    const reader = new FileReader();
-                    reader.readAsDataURL(audioBlob); 
-                    reader.onloadend = () => {
-                        const base64Audio = reader.result;
-                        push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, url: base64Audio, tipo: 'audio' });
-                    };
-                };
-                mediaRecorder.start();
-                isRecording = true;
-                btn.classList.add('mic-active'); btn.innerHTML = "🔴";
-            } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                btn.classList.remove('mic-active'); btn.innerHTML = "🎤";
-            }
-        },
-
-        toggleCall: () => {
-            const status = document.getElementById('call-status');
-            if(status.style.display === 'none') {
-                status.style.display = 'inline';
-                navigator.mediaDevices.getUserMedia({ audio: true });
-            } else {
-                status.style.display = 'none';
-            }
+            if (!isRec) {
+                const s = await navigator.mediaDevices.getUserMedia({ audio: true }); recorder = new MediaRecorder(s); chunks = [];
+                recorder.ondataavailable = e => chunks.push(e.data);
+                recorder.onstop = () => { const r = new FileReader(); r.readAsDataURL(new Blob(chunks)); r.onloadend = () => { push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, url: r.result, tipo: 'audio' }); }; };
+                recorder.start(); isRec = true; document.getElementById('btn-audio').style.background = 'red';
+            } else { recorder.stop(); isRec = false; document.getElementById('btn-audio').style.background = '#128c7e'; }
         }
     };
-
-    if(GTR.user) GTR.init();
+    GTR.init();
 </script>
 </body>
 </html>
