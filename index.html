@@ -16,7 +16,7 @@
         .active { display: flex; animation: fade 0.1s ease; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* TELA DE BLOQUEIO PRIORITÁRIA */
+        /* TELA DE BLOQUEIO */
         #sc-lock { z-index: 900000; justify-content: center; align-items: center; text-align: center; color: white; }
         .lock-box { z-index: 999999; position: relative; width: 100%; }
         .lock-time { font-size: 70px; font-weight: 200; margin-bottom: 20px; text-shadow: 0 2px 15px rgba(0,0,0,0.8); }
@@ -38,8 +38,9 @@
         .bbl { padding: 10px 14px; margin: 5px 0; border-radius: 12px; max-width: 85%; color: white; font-size: 14px; }
         .sent { background: #005c4b; align-self: flex-end; }
         .recv { background: #202c33; align-self: flex-start; }
+        audio { height: 35px; width: 160px; filter: invert(1); margin-top: 5px; }
 
-        /* NUBANK & PIX MODAL */
+        /* NUBANK & PIX */
         .nu-header { background: var(--nu); padding: 65px 20px 30px; color: white; }
         .card { background: #1c1c1e; margin: 15px; padding: 22px; border-radius: 22px; color: white; border: 1px solid #333; }
         .nu-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: #333; color: white; font-weight: bold; margin-top: 12px; }
@@ -71,7 +72,7 @@
             <h2>GTRP MOBILE</h2>
             <input type="text" id="in-user" placeholder="Seu Nome" style="width:100%; padding:18px; margin-top:25px; border-radius:15px; background:#111; border:1px solid #444; color:white;">
             <input type="text" id="in-cpf" placeholder="Seu CPF" style="width:100%; padding:18px; margin-top:12px; border-radius:15px; background:#111; border:1px solid #444; color:white;">
-            <button class="nu-btn" style="background:var(--ios); margin-top:35px;" onclick="GTR.auth()">ENTRAR NO SISTEMA</button>
+            <button class="nu-btn" style="background:var(--ios); margin-top:35px;" onclick="GTR.auth()">ENTRAR</button>
         </div>
     </div>
 
@@ -115,39 +116,24 @@
     </div>
 
     <div id="sc-tiger" class="screen">
-        <div style="background:#cc0000; padding:50px 20px 15px; color:white; text-align:center;"><b>🐯 GTR BET - TIGRINHO</b></div>
+        <div style="background:#cc0000; padding:50px 20px 15px; color:white; text-align:center;"><b>🐯 GTR BET</b></div>
         <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-top:30px;">
-            <div class="card" style="width:90%; text-align:center;">
-                <p style="font-size:12px; color:#888;">SALDO EM JOGO</p>
-                <h2 id="tiger-balance" style="color:#ffcc00;">R$ 0,00</h2>
-            </div>
-            <div id="tiger-result" style="color:white; font-weight:bold; margin:15px 0; min-height:25px;"></div>
+            <div class="card" style="width:90%; text-align:center;"><h2 id="tiger-balance" style="color:#ffcc00;">R$ 0,00</h2></div>
+            <div id="tiger-result" style="color:white; margin:10px;"></div>
             <div class="slot-machine">
                 <div class="slot-col" id="s1">🐯</div>
                 <div class="slot-col" id="s2">🐯</div>
                 <div class="slot-col" id="s3">🐯</div>
             </div>
-            <div style="width:90%;">
-                <input type="number" id="bet-amount" placeholder="Valor da Aposta" style="width:100%; padding:15px; border-radius:12px; background:#222; border:1px solid #cc0000; color:white; margin-bottom:12px;">
-                <button class="nu-btn" id="tiger-spin-btn" style="background:#ffcc00; color:#000;" onclick="GTR.spinTiger()">APOSTAR AGORA</button>
-                <div style="display:flex; gap:12px; margin-top:12px;">
-                    <button class="nu-btn" style="flex:1; background:#007aff" onclick="GTR.depositoTiger()">DEPOSITAR</button>
-                    <button class="nu-btn" style="flex:1; background:#34c759" onclick="GTR.sacarTiger()">SACAR</button>
-                </div>
-            </div>
+            <button class="nu-btn" style="width:90%; background:#ffcc00; color:#000;" onclick="GTR.spinTiger()">APOSTAR</button>
         </div>
     </div>
 
     <div id="sc-set" class="screen">
         <div style="padding:65px 25px 25px; color:white;"><h2>Ajustes</h2></div>
         <div class="card">
-            <p style="color:#888; font-size:12px;">LINK DO FUNDO (LOCK/HOME):</p>
-            <input type="text" id="wall-link" placeholder="Cole o link .jpg ou .png" style="width:100%; padding:12px; border-radius:10px; background:#222; border:1px solid #444; color:white; margin-top:8px;">
-            <button class="nu-btn" onclick="GTR.setWall(document.getElementById('wall-link').value)">SALVAR WALLPAPER</button>
-        </div>
-        <div class="card">
-            <input type="text" id="new-pin" placeholder="Novo PIN (4 digitos)" maxlength="4" style="width:100%; padding:12px; border-radius:10px; background:#222; border:1px solid #444; color:white;">
-            <button class="nu-btn" onclick="GTR.changePin()">ATUALIZAR PIN 0000</button>
+            <input type="text" id="wall-link" placeholder="Link do Wallpaper .jpg" style="width:100%; padding:12px; border-radius:10px; background:#222; border:1px solid #444; color:white;">
+            <button class="nu-btn" onclick="GTR.setWall(document.getElementById('wall-link').value)">SALVAR</button>
         </div>
     </div>
 
@@ -189,18 +175,16 @@
                 GTR.wall = url; localStorage.setItem('gtr_wall', url);
                 document.getElementById('sc-lock').style.backgroundImage = `url('${url}')`;
                 document.getElementById('sc-home').style.backgroundImage = `url('${url}')`;
-                alert("WALLPAPER ATUALIZADO!");
+                alert("WALLPAPER SALVO!");
             }
         },
-
-        changePin: () => { const p = document.getElementById('new-pin').value; if(p.length===4){ GTR.pin = p; localStorage.setItem('gtr_pin', p); alert("PIN SALVO!"); } },
 
         auth: async () => {
             const n = document.getElementById('in-user').value.trim();
             const c = document.getElementById('in-cpf').value.trim();
             const snap = await get(ref(db, `usuarios/${n}`));
             if(snap.exists() && snap.val().cpf == c) { localStorage.setItem('gtr_user', n); location.reload(); }
-            else alert("USUÁRIO NÃO ENCONTRADO!");
+            else alert("DADOS INVÁLIDOS!");
         },
 
         open: (id) => { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('sc-'+id).classList.add('active'); },
@@ -223,47 +207,19 @@
         executarPix: async () => {
             const alvo = document.getElementById('pix-nome').value.trim();
             const valor = parseFloat(document.getElementById('pix-valor').value);
-            if(!alvo || isNaN(valor) || valor <= 0 || valor > GTR.realSaldo) return alert("ERRO NO VALOR OU SALDO!");
+            if(!alvo || isNaN(valor) || valor <= 0 || valor > GTR.realSaldo) return alert("SALDO INSUFICIENTE!");
             const snapAlvo = await get(ref(db, `usuarios/${alvo}/saldo`));
-            if(!snapAlvo.exists()) return alert("JOGADOR NÃO EXISTE!");
+            if(!snapAlvo.exists()) return alert("ALVO NÃO EXISTE!");
             await set(ref(db, `usuarios/${GTR.user}/saldo`), GTR.realSaldo - valor);
             await set(ref(db, `usuarios/${alvo}/saldo`), snapAlvo.val() + valor);
-            alert("PIX ENVIADO COM SUCESSO!");
-            document.getElementById('pix-modal').style.display = 'none';
+            alert("PIX ENVIADO!"); document.getElementById('pix-modal').style.display = 'none';
         },
 
-        depositoTiger: async () => {
-            const v = parseFloat(prompt("VALOR DO DEPÓSITO:"));
-            if(v > 0 && v <= GTR.realSaldo) {
-                await set(ref(db, `usuarios/${GTR.user}/saldo`), GTR.realSaldo - v);
-                GTR.tigerSaldo += v; document.getElementById('tiger-balance').innerText = "R$ " + GTR.tigerSaldo.toFixed(2);
-            }
-        },
         spinTiger: () => {
-            const bet = parseFloat(document.getElementById('bet-amount').value);
-            if(!bet || bet > GTR.tigerSaldo) return alert("SALDO INSUFICIENTE!");
-            GTR.tigerSaldo -= bet;
-            document.getElementById('tiger-result').innerText = "SORTEANDO...";
-            const cols = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
-            cols.forEach(c => c.classList.add('spinning'));
-            setTimeout(() => {
-                cols.forEach(c => c.classList.remove('spinning'));
-                const icons = ["🐯", "💰", "💎", "🍒"];
-                const r = [icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)]];
-                cols[0].innerText = r[0]; cols[1].innerText = r[1]; cols[2].innerText = r[2];
-                let win = 0; if(r[0]===r[1] && r[1]===r[2]) win = bet*5; else if(r[0]===r[1] || r[1]===r[2]) win = bet*2;
-                GTR.tigerSaldo += win;
-                document.getElementById('tiger-result').innerText = win > 0 ? "GANHOU R$ "+win.toFixed(2) : "NÃO FOI DESSA VEZ!";
-                document.getElementById('tiger-balance').innerText = "R$ " + GTR.tigerSaldo.toFixed(2);
-            }, 1000);
-        },
-        sacarTiger: async () => {
-            if(GTR.tigerSaldo < 150) return alert("MÍNIMO R$ 150!");
-            const snap = await get(ref(db, `usuarios/${GTR.user}/cpf`));
-            if(prompt("DIGITE SEU CPF:") === snap.val()) {
-                await set(ref(db, `usuarios/${GTR.user}/saldo`), GTR.realSaldo + GTR.tigerSaldo);
-                GTR.tigerSaldo = 0; alert("DINHEIRO ENVIADO PRO NUBANK!");
-            }
+            const icons = ["🐯", "💰", "💎", "🍒"];
+            const r = [icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)]];
+            document.getElementById('s1').innerText = r[0]; document.getElementById('s2').innerText = r[1]; document.getElementById('s3').innerText = r[2];
+            document.getElementById('tiger-result').innerText = r[0]===r[1] && r[1]===r[2] ? "GANHOU!" : "TENTE DE NOVO";
         },
 
         openChat: (nome) => {
@@ -272,18 +228,27 @@
                 const box = document.getElementById('msgs'); box.innerHTML = "";
                 s.forEach(m => {
                     const d = m.val(); if((d.de===GTR.user && d.para===nome) || (d.de===nome && d.para===GTR.user)) {
-                        box.innerHTML += `<div class="bbl ${d.de===GTR.user?'sent':'recv'}">${d.tipo==='audio'?'<audio controls src="'+d.url+'" style="width:160px"></audio>':d.txt}</div>`;
+                        box.innerHTML += `<div class="bbl ${d.de===GTR.user?'sent':'recv'}">${d.tipo==='audio'?'<audio controls src="'+d.url+'"></audio>':d.txt}</div>`;
                     }
                 }); box.scrollTop = box.scrollHeight;
             });
         },
         closeChat: () => document.getElementById('chat-ui').style.display = 'none',
         send: () => { const i = document.getElementById('msg-input'); if(i.value) { push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, txt: i.value, tipo: 'texto' }); i.value = ""; } },
+        
         toggleAudio: async () => {
             if (!isRec) {
-                const s = await navigator.mediaDevices.getUserMedia({ audio: true }); recorder = new MediaRecorder(s); chunks = [];
+                const s = await navigator.mediaDevices.getUserMedia({ audio: true }); 
+                recorder = new MediaRecorder(s); chunks = [];
                 recorder.ondataavailable = e => chunks.push(e.data);
-                recorder.onstop = () => { const r = new FileReader(); r.readAsDataURL(new Blob(chunks)); r.onloadend = () => { push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, url: r.result, tipo: 'audio' }); }; };
+                recorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'audio/webm' });
+                    const r = new FileReader(); 
+                    r.readAsDataURL(blob); 
+                    r.onloadend = () => { 
+                        push(ref(db, 'mensagens'), { de: GTR.user, para: GTR.alvo, url: r.result, tipo: 'audio' }); 
+                    }; 
+                };
                 recorder.start(); isRec = true; document.getElementById('btn-audio').style.background = 'red';
             } else { recorder.stop(); isRec = false; document.getElementById('btn-audio').style.background = '#128c7e'; }
         }
@@ -291,4 +256,5 @@
     GTR.init();
 </script>
 </body>
-</html>
+    </html>
+    
