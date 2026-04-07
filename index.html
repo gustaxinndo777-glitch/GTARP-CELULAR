@@ -13,14 +13,22 @@
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: #000; z-index: 10; padding-bottom: 60px; background-size: cover; background-position: center; }
         .active { display: flex; animation: fade 0.1s ease; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* LOCKSCREEN */
         #sc-lock { z-index: 900000; justify-content: center; align-items: center; text-align: center; color: white; }
         .lock-time { font-size: 70px; font-weight: 200; margin-bottom: 20px; text-shadow: 0 2px 15px rgba(0,0,0,0.8); }
         .pin-input { background: rgba(255,255,255,0.25); border: 2px solid rgba(255,255,255,0.4); width: 180px; text-align: center; font-size: 28px; letter-spacing: 8px; padding: 15px; border-radius: 20px; color: white; backdrop-filter: blur(15px); }
-        .home-bar-area { position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; z-index: 1000000; display: flex; justify-content: center; align-items: center; }
-        .home-bar { width: 120px; height: 5px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        
+        /* NAVEGAÇÃO */
+        .nav-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; z-index: 1000000; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); }
+        .bar-ios { width: 120px; height: 5px; background: #fff; border-radius: 10px; }
+        .bar-android { width: 100%; display: none; justify-content: space-around; align-items: center; color: white; font-size: 20px; padding: 0 40px; }
+
         .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 100px 20px; }
         .app { display: flex; flex-direction: column; align-items: center; color: white; font-size: 11px; font-weight: 600; text-shadow: 0 2px 5px #000; }
-        .app img { width: 62px; height: 62px; border-radius: 16px; margin-bottom: 6px; }
+        .app img { width: 62px; height: 62px; border-radius: 16px; margin-bottom: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        
+        /* WHATSAPP */
         .w-header { background: #202c33; padding: 50px 15px 15px; color: white; display: flex; justify-content: space-between; }
         .chat-win { position: absolute; inset: 0; background: var(--wpp-bg); display: none; flex-direction: column; z-index: 2000; padding-bottom: 60px; }
         .chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; }
@@ -28,6 +36,19 @@
         .sent { background: #005c4b; align-self: flex-end; }
         .recv { background: #202c33; align-self: flex-start; }
         audio { filter: invert(1); width: 160px; height: 35px; }
+
+        /* NUBANK */
+        .nu-header { background: var(--nu); padding: 65px 20px 30px; color: white; }
+        .card { background: #1c1c1e; margin: 15px; padding: 22px; border-radius: 22px; color: white; border: 1px solid #333; }
+        .nu-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: #333; color: white; font-weight: bold; margin-top: 12px; }
+        #pix-modal { position: absolute; inset: 0; background: rgba(0,0,0,0.98); z-index: 500000; display: none; flex-direction: column; padding: 70px 25px; color: white; }
+
+        /* TIGRINHO */
+        #sc-tiger { background: #1a0101; }
+        .slot-machine { width: 290px; height: 190px; background: #ffcc00; border: 10px solid #cc0000; border-radius: 25px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 25px; }
+        .slot-col { width: 75px; height: 130px; background: white; border-radius: 12px; font-size: 55px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .spinning { animation: spin 0.1s infinite; }
+        @keyframes spin { 0% { transform: translateY(-15px); } 100% { transform: translateY(15px); } }
     </style>
 </head>
 <body>
@@ -38,7 +59,8 @@
     <div id="sc-lock" class="screen active">
         <div class="lock-box">
             <div class="lock-time clock-text">--:--</div>
-            <input type="password" id="pin-field" class="pin-input" maxlength="4" oninput="GTR.checkPin(this.value)" placeholder="••••">
+            <p style="margin-bottom:20px; font-size:15px; font-weight: bold;">DIGITE SEU PIN</p>
+            <input type="password" id="pin-field" class="pin-input" maxlength="4" oninput="GTR.checkPin(this.value)" placeholder="••••" autofocus>
         </div>
     </div>
 
@@ -47,7 +69,7 @@
             <h2>GTRP MOBILE</h2>
             <input type="text" id="in-user" placeholder="Seu Nome" style="width:100%; padding:18px; margin-top:25px; border-radius:15px; background:#111; border:1px solid #444; color:white;">
             <input type="text" id="in-cpf" placeholder="Seu CPF" style="width:100%; padding:18px; margin-top:12px; border-radius:15px; background:#111; border:1px solid #444; color:white;">
-            <button onclick="GTR.auth()" style="width:100%; padding:16px; border-radius:14px; border:none; background:var(--ios); color:white; font-weight:bold; margin-top:35px;">ENTRAR</button>
+            <button class="nu-btn" style="background:var(--ios); margin-top:35px;" onclick="GTR.auth()">ENTRAR NO SISTEMA</button>
         </div>
     </div>
 
@@ -55,6 +77,7 @@
         <div class="grid">
             <div class="app" onclick="GTR.open('wpp')"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">WhatsApp</div>
             <div class="app" onclick="GTR.open('nu')"><img src="https://logodownload.org/wp-content/uploads/2019/08/nubank-logo-3.png" style="background:#fff; padding:5px">Nubank</div>
+            <div class="app" onclick="GTR.open('tiger')"><img src="https://png.pngtree.com/png-clipart/20231014/original/pngtree-3d-tiger-cartoon-png-image_13303649.png" style="background:#ff9500; padding:5px">Tigrinho</div>
             <div class="app" onclick="GTR.open('set')"><img src="https://cdn-icons-png.flaticon.com/512/563/563541.png">Ajustes</div>
         </div>
     </div>
@@ -63,25 +86,76 @@
         <div class="w-header"><b>WhatsApp</b><span>🔍 ⋮</span></div>
         <div id="contatos-list" style="flex:1; overflow-y:auto; background:#111b21;"></div>
         <div id="chat-ui" class="chat-win">
-            <div class="w-header"><span onclick="GTR.closeChat()">←</span> <b id="chat-nome">Nome</b></div>
+            <div class="w-header"><span onclick="GTR.closeChat()">←</span> <b id="chat-nome">Nome</b><span>📞</span></div>
             <div id="msgs" class="chat-msgs"></div>
-            <div style="background:#202c33; padding:12px; display:flex;">
+            <div style="background:#202c33; padding:12px; display:flex; align-items:center;">
                 <input type="text" id="msg-input" style="flex:1; padding:14px; border-radius:25px; background:#2a3942; border:none; color:white;">
                 <button id="btn-audio" onclick="GTR.toggleAudio()" style="background:#128c7e; border:none; width:45px; height:45px; border-radius:50%; color:white; margin-left:6px;">🎤</button>
             </div>
         </div>
     </div>
 
-    <div id="sc-set" class="screen">
-        <div style="padding:65px 25px; color:white;"><h2>Ajustes</h2></div>
-        <div style="padding:20px;">
-            <p style="color:#888; font-size:12px;">LINK DO WALLPAPER INDIVIDUAL:</p>
-            <input type="text" id="wall-link" style="width:100%; padding:12px; background:#222; border:1px solid #444; color:white; border-radius:10px;">
-            <button onclick="GTR.setWall()" style="width:100%; padding:15px; background:var(--ios); color:white; border:none; border-radius:10px; margin-top:10px;">SALVAR FUNDO</button>
+    <div id="sc-nu" class="screen">
+        <div class="nu-header"><p>Olá, <b class="u-name">Cidadão</b></p></div>
+        <div class="card" style="margin-top:-25px;">
+            <p style="color:#888;">Saldo disponível</p>
+            <h1 id="u-saldo">R$ 0,00</h1>
+            <button class="nu-btn" onclick="document.getElementById('pix-modal').style.display='flex'">💠 Enviar Pix</button>
+        </div>
+        <div id="pix-modal">
+            <h3>Área Pix</h3>
+            <input type="text" id="pix-nome" placeholder="Nome do Destinatário" style="width:100%; padding:18px; margin-top:25px; border-radius:12px; background:#222; border:1px solid #444; color:white;">
+            <input type="number" id="pix-valor" placeholder="Valor R$" style="width:100%; padding:18px; margin-top:15px; border-radius:12px; background:#222; border:1px solid #444; color:white;">
+            <button class="nu-btn" style="background:var(--nu)" onclick="GTR.executarPix()">CONFIRMAR ENVIO</button>
+            <button class="nu-btn" onclick="document.getElementById('pix-modal').style.display='none'">CANCELAR</button>
         </div>
     </div>
 
-    <div class="home-bar-area" onclick="GTR.goHome()"><div class="home-bar"></div></div>
+    <div id="sc-tiger" class="screen">
+        <div style="background:#cc0000; padding:50px 20px 15px; color:white; text-align:center;"><b>🐯 GTR BET - TIGRINHO</b></div>
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-top:30px;">
+            <div class="card" style="width:90%; text-align:center;">
+                <p style="font-size:12px; color:#888;">SALDO EM JOGO</p>
+                <h2 id="tiger-balance" style="color:#ffcc00;">R$ 0,00</h2>
+            </div>
+            <div id="tiger-result" style="color:white; font-weight:bold; margin:15px 0; min-height:25px;"></div>
+            <div class="slot-machine">
+                <div class="slot-col" id="s1">🐯</div>
+                <div class="slot-col" id="s2">🐯</div>
+                <div class="slot-col" id="s3">🐯</div>
+            </div>
+            <div style="width:90%;">
+                <input type="number" id="bet-amount" placeholder="Valor da Aposta" style="width:100%; padding:15px; border-radius:12px; background:#222; border:1px solid #cc0000; color:white; margin-bottom:12px;">
+                <button class="nu-btn" style="background:#ffcc00; color:#000;" onclick="GTR.spinTiger()">APOSTAR AGORA</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sc-set" class="screen">
+        <div style="padding:65px 25px 25px; color:white;"><h2>Ajustes</h2></div>
+        <div class="card">
+            <p style="color:#888; font-size:12px;">LINK DO FUNDO:</p>
+            <input type="text" id="wall-link" placeholder="Cole o link .jpg" style="width:100%; padding:12px; border-radius:10px; background:#222; border:1px solid #444; color:white; margin-top:8px;">
+            <button class="nu-btn" onclick="GTR.setWall()">SALVAR FUNDO</button>
+        </div>
+        <div class="card">
+            <p style="color:#888; font-size:12px;">NOVO PIN (4 DÍGITOS):</p>
+            <input type="text" id="new-pin" maxlength="4" style="width:100%; padding:12px; border-radius:10px; background:#222; border:1px solid #444; color:white; margin-top:8px;">
+            <button class="nu-btn" onclick="GTR.changePin()">ATUALIZAR PIN</button>
+        </div>
+        <div class="card">
+            <p style="color:#888; font-size:12px;">ESTILO DE NAVEGAÇÃO:</p>
+            <button class="nu-btn" onclick="GTR.setNav('ios')">ESTILO IOS (BARRA)</button>
+            <button class="nu-btn" onclick="GTR.setNav('android')">ESTILO ANDROID (BOTÕES)</button>
+        </div>
+    </div>
+
+    <div class="nav-bar" onclick="GTR.goHome()">
+        <div id="nav-ios" class="bar-ios"></div>
+        <div id="nav-android" class="bar-android">
+            <span>◀</span> <span>●</span> <span>■</span>
+        </div>
+    </div>
 </div>
 
 <script type="module">
@@ -94,7 +168,8 @@
 
     window.GTR = {
         user: localStorage.getItem('gtr_user'),
-        pin: "0000",
+        pin: localStorage.getItem('gtr_pin') || "0000",
+        tigerSaldo: 0, realSaldo: 0,
 
         clock: () => {
             const d = new Date();
@@ -102,11 +177,32 @@
             document.querySelectorAll('.clock-text').forEach(e => e.innerText = t);
         },
 
-        checkPin: (v) => { if(v === GTR.pin) { document.getElementById('sc-lock').classList.remove('active'); if(!GTR.user) GTR.open('login'); else GTR.open('home'); document.getElementById('pin-field').value = ""; } },
+        checkPin: (v) => {
+            if(v === GTR.pin) { 
+                document.getElementById('sc-lock').classList.remove('active'); 
+                if(!GTR.user) GTR.open('login'); else GTR.open('home');
+                document.getElementById('pin-field').value = "";
+            } else if(v.length === 4) { alert("PIN INCORRETO!"); document.getElementById('pin-field').value = ""; }
+        },
+
+        changePin: () => {
+            const p = document.getElementById('new-pin').value;
+            if(p.length === 4) { GTR.pin = p; localStorage.setItem('gtr_pin', p); alert("PIN ATUALIZADO!"); }
+        },
 
         setWall: async () => {
             const url = document.getElementById('wall-link').value;
             if(url && GTR.user) { await set(ref(db, `usuarios/${GTR.user}/wallpaper`), url); alert("SALVO!"); location.reload(); }
+        },
+
+        setNav: (tipo) => {
+            if(tipo === 'ios') {
+                document.getElementById('nav-ios').style.display = 'block';
+                document.getElementById('nav-android').style.display = 'none';
+            } else {
+                document.getElementById('nav-ios').style.display = 'none';
+                document.getElementById('nav-android').style.display = 'flex';
+            }
         },
 
         auth: async () => {
@@ -124,9 +220,14 @@
             GTR.clock(); setInterval(GTR.clock, 1000);
             if(GTR.user) {
                 onValue(ref(db, `usuarios/${GTR.user}`), s => {
-                    const d = s.val(); if(d && d.wallpaper) {
-                        document.getElementById('sc-lock').style.backgroundImage = `url('${d.wallpaper}')`;
-                        document.getElementById('sc-home').style.backgroundImage = `url('${d.wallpaper}')`;
+                    const d = s.val(); if(d) {
+                        GTR.realSaldo = d.saldo || 0;
+                        document.querySelectorAll('.u-name').forEach(e => e.innerText = GTR.user);
+                        document.getElementById('u-saldo').innerText = "R$ " + GTR.realSaldo.toLocaleString('pt-br');
+                        if(d.wallpaper) {
+                            document.getElementById('sc-lock').style.backgroundImage = `url('${d.wallpaper}')`;
+                            document.getElementById('sc-home').style.backgroundImage = `url('${d.wallpaper}')`;
+                        }
                     }
                 });
             }
@@ -134,6 +235,32 @@
                 const list = document.getElementById('contatos-list'); list.innerHTML = "";
                 s.forEach(u => { if(u.key !== GTR.user) list.innerHTML += `<div style="padding:18px; border-bottom:1px solid #222; color:white;" onclick="GTR.openChat('${u.key}')"><b>${u.key}</b></div>`; });
             });
+        },
+
+        executarPix: async () => {
+            const alvo = document.getElementById('pix-nome').value.trim();
+            const valor = parseFloat(document.getElementById('pix-valor').value);
+            if(!alvo || isNaN(valor) || valor <= 0 || valor > GTR.realSaldo) return alert("ERRO NO VALOR!");
+            const snapAlvo = await get(ref(db, `usuarios/${alvo}/saldo`));
+            if(!snapAlvo.exists()) return alert("JOGADOR NÃO EXISTE!");
+            await set(ref(db, `usuarios/${GTR.user}/saldo`), GTR.realSaldo - valor);
+            await set(ref(db, `usuarios/${alvo}/saldo`), snapAlvo.val() + valor);
+            alert("PIX ENVIADO!"); document.getElementById('pix-modal').style.display = 'none';
+        },
+
+        spinTiger: () => {
+            const bet = parseFloat(document.getElementById('bet-amount').value);
+            if(!bet) return alert("INSIRA UM VALOR!");
+            document.getElementById('tiger-result').innerText = "SORTEANDO...";
+            const cols = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
+            cols.forEach(c => c.classList.add('spinning'));
+            setTimeout(() => {
+                cols.forEach(c => c.classList.remove('spinning'));
+                const icons = ["🐯", "💰", "💎", "🍒"];
+                const r = [icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)], icons[Math.floor(Math.random()*4)]];
+                cols[0].innerText = r[0]; cols[1].innerText = r[1]; cols[2].innerText = r[2];
+                document.getElementById('tiger-result').innerText = r[0]===r[1] && r[1]===r[2] ? "GANHOU!" : "TENTE DE NOVO";
+            }, 1000);
         },
 
         openChat: (nome) => {
@@ -152,7 +279,7 @@
         toggleAudio: async () => {
             if (!isRec) {
                 const s = await navigator.mediaDevices.getUserMedia({ audio: true });
-                recorder = new MediaRecorder(s); chunks = []; // Zera os pedaços aqui!
+                recorder = new MediaRecorder(s); chunks = []; 
                 recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
                 recorder.onstop = () => {
                     const blob = new Blob(chunks, { type: 'audio/webm' });
